@@ -2,17 +2,19 @@ from random import randint
 
 
 def crit(player):
-    critical = randint(1,100)
-    if player.crit > critical:
+    print('crit before')
+    critical = randint(1, 1000//player.crit)
+    print('crit')
+    if 10 >= critical:
         return True
     else:
         return False
 
 
 def dodge(player):
-    standart_dodge = 1
+    print('dodge')
     dodge_try = randint(1, 10)
-    if player.dodge * standart_dodge >= dodge_try:
+    if player.dodge >= dodge_try:
         return True
     else:
         return False
@@ -24,7 +26,7 @@ def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - 
     critical = 'Crit! Damage doubled.\n'
     player_dmg = 'You deal %s dmg to enemy. %s is on %s hp.\n' % (
         dmg1, player.opponent.name.title(), player.opponent.health)
-    enemy_dmg = '%s deal %s dmg to you.\n\n' % (player.opponent.name.title(), dmg2)
+    enemy_dmg = '%s deal %s dmg to you. You are on %s hp.\n\n' % (player.opponent.name.title(), dmg2, player.health)
     main_text = ''
     if dodge2:
         main_text += enemy_dodge
@@ -42,6 +44,7 @@ def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - 
 
 
 def attack(player):
+    print('init')
     player_crit = 0
     enemy_crit = 0
     player_damage = 0
@@ -51,7 +54,9 @@ def attack(player):
         enemy_dodge = True
     else:
         enemy_dodge = False
-        player_damage = player.attack + player.equip
+        print(1)
+        player_damage = player.attack + player.weapon[1]
+        print(1)
         if crit(player):
             player_crit = True
             player_damage *= 2
@@ -83,7 +88,7 @@ def pobeditel(player):
 
 
 def pobeg(player):
-    if randint(0, 1) > 0:
+    if randint(1, 4) == 1:
         player.health = player.starthealth
         player.opponent = ''
         return True

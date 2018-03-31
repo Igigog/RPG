@@ -7,12 +7,13 @@ class Player:
         self.starthealth = 20
         self.health = 20
         self.attack = 3
-        self.equip = 0 #only one int
         self.opponent = ''
         self.exp = 0
         self.armor = 0
-        self.crit = 0
+        self.weapon = ['nothing', 0, 1]
+        self.crit = 1
         self.dodge = 1
+        self.inventory = []
 
     def search_weapon(self):
         sum = 0
@@ -24,10 +25,11 @@ class Player:
             if rand_ch > start_stat:           # drop chance of last element = 1/sum etc.
                 start_stat += step             # drop chance of reversed n'th element = n'th term/sum
             else:
-                n = len(weapons) + (step - 1)  # step starts from 2 therefore we need to subtract 1
+                n = len(weapons) - (step - 1)  # step starts from 2 therefore we need to subtract 1
                 break
-        self.equip = max(self.equip, n)
-        return weapons[n]
+        if weapons[n] not in self.inventory:
+            self.inventory.append(weapons[n])
+        return weapons[n][0]
 
     def find_opponent(self):
         opponent = randint(0, len(opponents) - 1)
@@ -42,7 +44,7 @@ class Mob:
         self.health = health
         self.attack = attack
         self.armor = armor
-        self.crit = 0
+        self.crit = 1
         self.dodge = 1
 
 
