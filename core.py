@@ -6,7 +6,7 @@ from fighting_system import *
 
 game = QApplication(sys.argv)
 app = App()
-player = Player(20, 3)
+player = Player()
 
 
 def game_start():
