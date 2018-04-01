@@ -9,18 +9,18 @@ class Player:
         self.attack = 3
         self.opponent = ''
         self.exp = 0
-        self.armor = ['nothing', 0, 1]
-        self.weapon = ['nothing', 0, 1]
+        self.armor = armors[0]
+        self.weapon = weapons[0]
         self.crit = 1
-        self.dodge = 2
-        self.wpninventory = []
-        self.armorinventory = []
+        self.dodge = 1
+        self.wpninventory = [self.weapon]
+        self.armorinventory = [self.armor]
         self.lvl = 1
         self.location = locations[0]
 
     @classmethod
     def fibonacci(cls):
-        x = 1
+        x = 2
         y = 1
         while True:
             x, y = y, x+y
@@ -43,9 +43,12 @@ class Player:
         return weapons[n][0]
 
     def find_opponent(self):
-        opponent = randint(0, len(opponents) - 1)
-        enemy = opponents[opponent]
-        self.opponent = Mob(enemy[0], enemy[1], enemy[2], enemy[3])
+        enemy_list = []
+        for x in opponents:
+            if x[4] in range(self.location[1], self.location[1] + 2):
+                enemy_list.append(x)
+        num = randint(0, len(enemy_list) - 1)
+        self.opponent = Mob(enemy_list[num])
 
     def lvl_up(self):
         lvl = 1
@@ -58,11 +61,13 @@ class Player:
 
 
 class Mob:
-    def __init__(self, name, health, attack, armor):
-        self.name = name
-        self.starthealth = health
-        self.health = health
-        self.attack = attack
-        self.armor = armor
+    def __init__(self, enemy_list):
+        self.name = enemy_list[0]
+        self.starthealth = enemy_list[1]
+        self.health = enemy_list[1]
+        self.attack = enemy_list[2]
+        self.armor = enemy_list[3]
+        self.lvl = enemy_list[4]
+        self.golddrop = enemy_list[5]
         self.crit = 1
         self.dodge = 1

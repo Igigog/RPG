@@ -87,11 +87,9 @@ def change_weapon():
 
 
 def exit_inv():
-    if player.opponent:
-        fight_mode(app)
-        app.invbtn.show()
-    else:
         main_mode(app)
+        app.armorbox.clear()
+        app.wpnbox.clear()
         app.invbtn.show()
 
 
@@ -104,9 +102,9 @@ def atk_clicked():
         player.exp += 1
         player.opponent = ''
         player.lvl_up()
+        app.label.setText(app.label.text() + 'Congratulations! You win!\nHealth restored\nExp +1\n\n')
         if player.lvl > startlvl:
             app.label.setText(app.label.text() + 'Level up! Your lvl is now %s\n' % player.lvl)
-        app.label.setText(app.label.text() + '\nCongratulations! You win!\nHealth restored\nExp +1\n\n')
     elif pobeditel(player) == 'nothing':
         pass
     else:

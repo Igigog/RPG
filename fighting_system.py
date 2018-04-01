@@ -20,6 +20,8 @@ def dodge(player):
 def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - enemy
     if player.opponent.health < 1:
         player.opponent.health = 0
+        if player.health < 1:
+            return 'So close! You win.\n\n'
     enemy_dodge = 'Enemy dodged your attack.\n'
     your_dodge = 'Dodge! You get no damage.\n\n'
     critical = 'Crit! Damage doubled.\n'
@@ -74,10 +76,10 @@ def attack(player):
 
 
 def pobeditel(player):
-    if player.health < 1:
-        return False
-    elif player.opponent.health < 1:
+    if player.opponent.health < 1:
         return True
+    elif player.health < 1:
+        return False
     else:
         return 'nothing'
 
