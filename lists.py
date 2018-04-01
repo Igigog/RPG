@@ -1,20 +1,23 @@
 import openpyxl
 database = openpyxl.load_workbook('database.xlsx')
+
 enemies_list = database['enemies']
 guns_list = database['guns']
+armor_list = database['armor']
+location_list = database['locations']
+
+locations = []
 opponents = []
 weapons = []
-for row in enemies_list.rows:
-    pre_list = []
-    for cell in row:
-        pre_list.append(cell.value)
-    opponents.append(pre_list)
+armors = []
 
-for row in guns_list.rows:
-    pre_list = []
-    for cell in row:
-        pre_list.append(cell.value)
-    weapons.append(pre_list)
+lists = {enemies_list: opponents, guns_list: weapons,
+         armor_list: armors, location_list: locations}
 
-weapons.pop(0)
-opponents.pop(0)
+for listik in lists:        # fill all lists
+    for row in listik.rows:
+        pre_list = []
+        for cell in row:
+            pre_list.append(cell.value)
+        lists[listik].append(pre_list)
+    lists[listik].pop(0)

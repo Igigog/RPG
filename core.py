@@ -20,6 +20,7 @@ def game_start():
     app.invbtn.show()
     main_mode(app)
 
+
 def load_clicked():
     try:
         with open('save.txt', 'r') as f:
@@ -48,7 +49,7 @@ def load_clicked():
 
 def save_clicked():
     with open('save.txt', 'w') as f:
-        f.write('%s,%s' % (player.inventory, player.exp))
+        f.write('%s,%s' % (player.wpninventory, player.exp))
 
 
 def find_clicked():
@@ -58,14 +59,26 @@ def find_clicked():
 
 
 def inv_clicked():
-    app.label.setText('You weapon is %s\n\n' % (player.weapon[0]))
-    for x in player.inventory:
+    app.label.setText('You weapon is %s\n' % (player.weapon[0]))
+    app.label.setText(app.label.text() + 'You armor is %s\n\n' % (player.armor[0]))
+    for x in player.wpninventory:
         app.wpnbox.addItem(x[0])
+    for x in player.armorinventory:
+        app.armorbox.addItem(x[0])
     inv_mode(app)
 
 
+def change_armor():
+    for x in player.armorinventory:
+        if x[0] == app.armorbox.currentText():
+            player.armor = x
+            player.dodge = player.armor[2]
+            break
+    app.label.setText(app.label.text() + 'You armor is %s\n\n' % (player.armor[0]))
+
+
 def change_weapon():
-    for x in player.inventory:
+    for x in player.wpninventory:
         if x[0] == app.wpnbox.currentText():
             player.weapon = x
             player.crit = player.weapon[2]
@@ -92,7 +105,7 @@ def atk_clicked():
         player.opponent = ''
         player.lvl_up()
         if player.lvl > startlvl:
-            app.label.setText(app.label.text() + 'Level up! Your lvl is now %s\n' % (player.lvl))
+            app.label.setText(app.label.text() + 'Level up! Your lvl is now %s\n' % player.lvl)
         app.label.setText(app.label.text() + '\nCongratulations! You win!\nHealth restored\nExp +1\n\n')
     elif pobeditel(player) == 'nothing':
         pass
@@ -105,7 +118,8 @@ def esc_clicked():
         app.label.setText(app.label.text() + 'You escaped c:\n\n')
         main_mode(app)
     else:
-        app.label.setText(app.label.text() + 'Escape failed :c\nYou get %s damage\n\n' % (player.opponent.attack))
+        app.label.setText(app.label.text() +
+                          'Escape failed :c\nYou get %s damage\n\n' % player.opponent.attack)
         if player.health < 1:
             dead_mode(app)
 
@@ -114,16 +128,42 @@ def sr_clicked():
     app.label.setText('You found %s\n' % (player.search_weapon()))
 
 
+def map_clicked():
+    app.label.setText('Your location is %s\n\n' % player.location[0])
+    for loc in locations:
+        app.mapbox.addItem(loc[0])
+    map_mode(app)
+
+
+def change_loc():
+    for loc in locations:
+        if app.mapbox.currentText() == loc[0]:
+            player.location = loc
+            break
+    app.label.setText(app.label.text() + 'Your location is %s\n\n' % player.location[0])
+
+
+def hide_map():
+    main_mode(app)
+
+
 app.startbtn.clicked.connect(game_start)
+app.loadbtn.clicked.connect(load_clicked)
+
 app.fndbtn.clicked.connect(find_clicked)
 app.srbtn.clicked.connect(sr_clicked)
+app.savebtn.clicked.connect(save_clicked)
+app.invbtn.clicked.connect(inv_clicked)
+
 app.escbtn.clicked.connect(esc_clicked)
 app.atkbtn.clicked.connect(atk_clicked)
-app.invbtn.clicked.connect(inv_clicked)
-app.loadbtn.clicked.connect(load_clicked)
-app.savebtn.clicked.connect(save_clicked)
+
 app.extinvbtn.clicked.connect(exit_inv)
 app.cngwpnbtn.clicked.connect(change_weapon)
+app.cngarmorbtn.clicked.connect(change_armor)
 
+app.mapbtn.clicked.connect(map_clicked)
+app.cnglocbtn.clicked.connect(change_loc)
+app.extmapbtn.clicked.connect(hide_map)
 
 sys.exit(game.exec_())

@@ -16,16 +16,27 @@ class App(QWidget):
 
     def buttons(self):
         self.startbtn = QPushButton('Start')
+        self.loadbtn = QPushButton('Load')
+
         self.atkbtn = QPushButton('Attack')
-        self.srbtn = QPushButton('Search')
-        self.fndbtn = QPushButton('Opponent')
         self.escbtn = QPushButton('Escape')
+
         self.invbtn = QPushButton('Inventory')
         self.savebtn = QPushButton('Save')
-        self.loadbtn = QPushButton('Load')
-        self.cngwpnbtn = QPushButton('Change')
+        self.srbtn = QPushButton('Search')
+        self.fndbtn = QPushButton('Opponent')
+        self.mapbtn = QPushButton('Map')
+
+        self.cngwpnbtn = QPushButton('Change weapon')
         self.extinvbtn = QPushButton('Leave inventory')
+        self.cngarmorbtn = QPushButton('Change armor')
+        self.armorbox = QComboBox()
         self.wpnbox = QComboBox()
+
+        self.mapbox = QComboBox()
+        self.cnglocbtn = QPushButton('Change location')
+        self.extmapbtn = QPushButton('Exit Map')
+
 
 
     def initUI(self):
@@ -43,28 +54,40 @@ class App(QWidget):
         self.label.setText('Are you ready for adventure?')
 
         self.buttons()
-        self.grid.addWidget(self.startbtn, 2,1) #start screen
+        self.grid.addWidget(self.startbtn, 2, 1)  # start screen
         self.grid.addWidget(self.loadbtn, 2, 2)
 
-        self.grid.addWidget(self.srbtn, 2, 1)   #main mode
+        self.grid.addWidget(self.srbtn, 2, 1)    # main mode
         self.grid.addWidget(self.fndbtn, 2, 2)
         self.grid.addWidget(self.savebtn, 3, 2)
+        self.grid.addWidget(self.mapbtn, 4, 1)
         self.savebtn.hide()
         self.srbtn.hide()
         self.fndbtn.hide()
+        self.mapbtn.hide()
 
-        self.grid.addWidget(self.atkbtn, 2, 2)  #fight mode
+        self.grid.addWidget(self.atkbtn, 2, 2)    # fight mode
         self.grid.addWidget(self.escbtn, 2, 1)
         self.atkbtn.hide()
         self.escbtn.hide()
 
-        self.grid.addWidget(self.wpnbox, 2, 1)      #inventory mode
-        self.grid.addWidget(self.extinvbtn, 3, 1)
+        self.grid.addWidget(self.wpnbox, 2, 1)     # inventory mode
+        self.grid.addWidget(self.extinvbtn, 4, 1)
         self.grid.addWidget(self.cngwpnbtn, 2, 2)
+        self.grid.addWidget(self.armorbox, 3, 1)
+        self.grid.addWidget(self.cngarmorbtn, 3, 2)
+        self.armorbox.hide()
+        self.cngarmorbtn.hide()
         self.cngwpnbtn.hide()
         self.extinvbtn.hide()
         self.wpnbox.hide()
 
+        self.grid.addWidget(self.mapbox, 2, 1)      # map mode
+        self.grid.addWidget(self.cnglocbtn, 2, 2)
+        self.grid.addWidget(self.extmapbtn, 3, 1)
+        self.mapbox.hide()
+        self.extmapbtn.hide()
+        self.cnglocbtn.hide()
 
         self.show()
 

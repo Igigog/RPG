@@ -1,5 +1,5 @@
 from random import randint
-from lists import weapons, opponents
+from lists import weapons, opponents, locations, armors
 
 
 class Player:
@@ -9,13 +9,14 @@ class Player:
         self.attack = 3
         self.opponent = ''
         self.exp = 0
-        self.armor = 0
+        self.armor = ['nothing', 0, 1]
         self.weapon = ['nothing', 0, 1]
         self.crit = 1
-        self.dodge = 1
-        self.inventory = []
+        self.dodge = 2
+        self.wpninventory = []
+        self.armorinventory = []
         self.lvl = 1
-        self.lvlup = 2
+        self.location = locations[0]
 
     @classmethod
     def fibonacci(cls):
@@ -31,14 +32,14 @@ class Player:
             summa += x
         rand_ch = randint(1, summa)
         start_stat = 1
-        for step in range(2, summa):           # sum = 1+2+3+4+...+n n=len(weapons)
-            if rand_ch > start_stat:           # drop chance of last element = 1/sum etc.
+        for step in range(2, summa):           # summa = 1+2+3+4+...+n n=len(weapons)
+            if rand_ch > start_stat:           # drop chance of last element = 1/summa etc.
                 start_stat += step             # drop chance of reversed n'th element = n'th term/sum
             else:
                 n = len(weapons) - (step - 1)  # step starts from 2 therefore we need to subtract 1
                 break
-        if weapons[n] not in self.inventory:
-            self.inventory.append(weapons[n])
+        if weapons[n] not in self.wpninventory:
+            self.wpninventory.append(weapons[n])
         return weapons[n][0]
 
     def find_opponent(self):
