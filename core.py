@@ -26,14 +26,20 @@ def load_clicked():
             pre_load = []
             for x in f.readline().split(','):
                 pre_load.append(int(x))
-            player.equip = pre_load[0]
-            player.exp = pre_load[1]
+
+            global player
+            player = Player()
+            player.exp = pre_load[0]
+            player.lvl_up()
+
             app.startbtn.hide()
             app.loadbtn.hide()
             app.grid.addWidget(app.invbtn, 3, 1)
             app.label.setText('Load successful!\n')
             app.invbtn.show()
+
             main_mode(app)
+
     except FileNotFoundError:
         app.label.setText('There is no saves!')
     except (IndexError, ValueError):
@@ -77,21 +83,21 @@ def exit_inv():
 
 
 def atk_clicked():
+    startlvl = player.lvl
     app.label.setText(app.label.text() + attack(player))
     if pobeditel(player) != 'nothing' and pobeditel(player):
         main_mode(app)
         player.health = player.starthealth
         player.exp += 1
         player.opponent = ''
+        player.lvl_up()
+        if player.lvl > startlvl:
+            app.label.setText(app.label.text() + 'Level up! Your lvl is now %s\n' % (player.lvl))
         app.label.setText(app.label.text() + '\nCongratulations! You win!\nHealth restored\nExp +1\n\n')
     elif pobeditel(player) == 'nothing':
         pass
     else:
-        app.label.setText(app.label.text() + 'You lose! Try again next time!')
-        app.escbtn.hide()
-        app.atkbtn.hide()
-        app.invbtn.hide()
-        app.startbtn.show()
+        dead_mode(app)
 
 
 def esc_clicked():
@@ -99,7 +105,9 @@ def esc_clicked():
         app.label.setText(app.label.text() + 'You escaped c:\n\n')
         main_mode(app)
     else:
-        app.label.setText(app.label.text() + 'Escape failed :c\nYou get %s damage' % (player.opponent.attack))
+        app.label.setText(app.label.text() + 'Escape failed :c\nYou get %s damage\n\n' % (player.opponent.attack))
+        if player.health < 1:
+            dead_mode(app)
 
 
 def sr_clicked():

@@ -1,4 +1,3 @@
-app = 0 #just a temporary variable
 def main_mode(app):
     app.escbtn.hide()  # hide fight mode
     app.atkbtn.hide()
@@ -38,3 +37,13 @@ def inv_mode(app):
     app.extinvbtn.show()
     app.wpnbox.show()
     app.cngwpnbtn.show()
+
+def dead_mode(app):
+    app.label.setText(app.label.text() + 'You lose! Try again next time!')
+
+    app.escbtn.hide()  #hide fight mode + inv
+    app.atkbtn.hide()
+    app.invbtn.hide()
+
+    app.startbtn.show()
+    app.loadbtn.show()

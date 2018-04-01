@@ -2,17 +2,14 @@ from random import randint
 
 
 def crit(player):
-    print('crit before')
-    critical = randint(1, 1000//player.crit)
-    print('crit')
-    if 10 >= critical:
+    critical = randint(1, 1000)
+    if player.crit * 100.0 >= critical:
         return True
     else:
         return False
 
 
 def dodge(player):
-    print('dodge')
     dodge_try = randint(1, 10)
     if player.dodge >= dodge_try:
         return True
@@ -21,12 +18,15 @@ def dodge(player):
 
 
 def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - enemy
+    if player.opponent.health < 1:
+        player.opponent.health = 0
     enemy_dodge = 'Enemy dodged your attack.\n'
     your_dodge = 'Dodge! You get no damage.\n\n'
     critical = 'Crit! Damage doubled.\n'
     player_dmg = 'You deal %s dmg to enemy. %s is on %s hp.\n' % (
         dmg1, player.opponent.name.title(), player.opponent.health)
-    enemy_dmg = '%s deal %s dmg to you. You are on %s hp.\n\n' % (player.opponent.name.title(), dmg2, player.health)
+    enemy_dmg = '%s deal %s dmg to you. You are on %s hp.\n\n' % (
+        player.opponent.name.title(), dmg2, player.health)
     main_text = ''
     if dodge2:
         main_text += enemy_dodge
@@ -44,19 +44,15 @@ def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - 
 
 
 def attack(player):
-    print('init')
     player_crit = 0
     enemy_crit = 0
     player_damage = 0
     enemy_damage = 0
     if dodge(player.opponent):
-        print('ed')
         enemy_dodge = True
     else:
         enemy_dodge = False
-        print(1)
         player_damage = player.attack + player.weapon[1]
-        print(1)
         if crit(player):
             player_crit = True
             player_damage *= 2
@@ -64,7 +60,6 @@ def attack(player):
             player_crit = False
         player.opponent.health -= player_damage
     if dodge(player):
-        print('pd')
         player_dodge = True
     else:
         player_dodge = False
