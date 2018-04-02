@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import \
-    QWidget, QPushButton, QLabel, QGridLayout, QFrame, QComboBox
+    QWidget, QPushButton, QLabel, QGridLayout, QFrame, QComboBox, QTabBar
 from PyQt5.QtGui import QIcon
 
 
@@ -23,7 +23,7 @@ class App(QWidget):
 
         self.invbtn = QPushButton('Inventory')
         self.savebtn = QPushButton('Save')
-        self.srbtn = QPushButton('Search')
+        self.srbtn = QPushButton('Search for a treasure')
         self.fndbtn = QPushButton('Opponent')
         self.mapbtn = QPushButton('Map')
 
@@ -37,7 +37,15 @@ class App(QWidget):
         self.cnglocbtn = QPushButton('Change location')
         self.extmapbtn = QPushButton('Exit Map')
 
-
+        self.markettab = QTabBar()
+        self.markettab.setShape(1)
+        self.marketbox = QComboBox()
+        self.markettab.addTab('Weapons')
+        self.markettab.addTab('Armor')
+        self.buybtn = QPushButton('Buy')
+        self.marketbtn = QPushButton('Market')
+        self.extmarket = QPushButton('Exit Market')
+        self.sellbtn = QPushButton('Sell garbage')
 
     def initUI(self):
         self.okno()
@@ -45,7 +53,7 @@ class App(QWidget):
         self.setLayout(self.grid)
 
         self.label = QLabel()
-        self.label.setFrameStyle(QFrame.Box)
+        self.label.setFrameStyle(QFrame.Box)           # main label
         self.label.setFrameShadow(QFrame.Raised)
         self.label.setMidLineWidth(1)
         self.label.setLineWidth(1)
@@ -54,6 +62,7 @@ class App(QWidget):
         self.label.setText('Are you ready for adventure?')
 
         self.buttons()
+
         self.grid.addWidget(self.startbtn, 2, 1)  # start screen
         self.grid.addWidget(self.loadbtn, 2, 2)
 
@@ -85,9 +94,23 @@ class App(QWidget):
         self.grid.addWidget(self.mapbox, 2, 1)      # map mode
         self.grid.addWidget(self.cnglocbtn, 2, 2)
         self.grid.addWidget(self.extmapbtn, 3, 1)
+        self.grid.addWidget(self.marketbtn, 3, 2)
+        self.marketbtn.hide()
         self.mapbox.hide()
         self.extmapbtn.hide()
         self.cnglocbtn.hide()
+
+        self.grid.addWidget(self.markettab, 2, 1)   # market mode
+        self.grid.addWidget(self.sellbtn, 4, 1)
+        self.grid.addWidget(self.marketbox, 3, 1)
+        self.grid.addWidget(self.buybtn, 3, 2)
+        self.grid.addWidget(self.extmarket, 4, 2)
+
+        self.buybtn.hide()
+        self.sellbtn.hide()
+        self.extmarket.hide()
+        self.markettab.hide()
+        self.marketbox.hide()
 
         self.show()
 

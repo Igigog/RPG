@@ -15,10 +15,14 @@ def game_start():
     global player
     player = 0
     player = Player()
+    print(1)
     app.startbtn.hide()
     app.grid.addWidget(app.invbtn, 3, 1)
+    print(2)
     app.invbtn.show()
+    print(3.1)
     main_mode(app)
+    print(3)
 
 
 def load_clicked():
@@ -90,7 +94,6 @@ def exit_inv():
         main_mode(app)
         app.armorbox.clear()
         app.wpnbox.clear()
-        app.invbtn.show()
 
 
 def atk_clicked():
@@ -122,10 +125,6 @@ def esc_clicked():
             dead_mode(app)
 
 
-def sr_clicked():
-    app.label.setText('You found %s\n' % (player.search_weapon()))
-
-
 def map_clicked():
     app.label.setText('Your location is %s\n\n' % player.location[0])
     for loc in locations:
@@ -141,15 +140,60 @@ def change_loc():
     app.label.setText(app.label.text() + 'Your location is %s\n\n' % player.location[0])
 
 
-def hide_map():
-    main_mode(app)
+def weapons_market():
+    app.marketbox.clear()
+    app.label.clear()
+    for x in weapons:
+        if x[3] in range(player.location[1], player.location[1] + 3):
+            app.marketbox.addItem(x[0])
+        app.label.setText(app.label.text() + '%s  ATK:%s  COST:%s\n' % (x[0], x[1], x[3]))
+
+
+def armor_market():
+    app.marketbox.clear()
+    app.label.clear()
+    for x in armors:
+        if x[3] in range(player.location[1], player.location[1] + 3):
+            app.marketbox.addItem(x[0])
+        app.label.setText(app.label.text() + '%s  DEF:%s  COST:%s\n' % (x[0], x[1], x[3]))
+
+
+def enter_market():
+    market_mode(app)
+    weapons_market()
+
+
+def buy_clicked():
+    for x in zip(weapons, armors):
+        if app.marketbox.currentText() == x[0]:
+            if player.gold < x[3]:
+                app.label.setText(app.label.text() + 'Not enough gold.\n\n')
+            else:
+                player.gold -= x[3]
+                if x in weapons:
+                    player.wpninventory.append(x)
+                else:
+                    player.armorinventory.append(x)
+            break
+
+
+def sell_clicked():
+    summa = 0
+    try:
+        for x in range(0, len(player.garbageinv)):
+            player.gold += player.garbageinv[x][1]
+            summa += player.garbageinv[x][1]
+            player.garbageinv.pop(x)
+        app.label.setText(app.label.text() + 'Garbage sold. You get %s gold.\n\n' % summa)
+    except IndexError:
+        app.label.setText(app.label.text() + 'No garbage.\n\n')
 
 
 app.startbtn.clicked.connect(game_start)
 app.loadbtn.clicked.connect(load_clicked)
 
 app.fndbtn.clicked.connect(find_clicked)
-app.srbtn.clicked.connect(sr_clicked)
+app.srbtn.clicked.connect(lambda: app.label.setText('You found %s\n' % (player.search_treasure())))
 app.savebtn.clicked.connect(save_clicked)
 app.invbtn.clicked.connect(inv_clicked)
 
@@ -162,6 +206,11 @@ app.cngarmorbtn.clicked.connect(change_armor)
 
 app.mapbtn.clicked.connect(map_clicked)
 app.cnglocbtn.clicked.connect(change_loc)
-app.extmapbtn.clicked.connect(hide_map)
+app.extmapbtn.clicked.connect(lambda: main_mode(app))
+
+app.marketbtn.clicked.connect(enter_market)
+app.extmarket.clicked.connect(lambda: map_mode(app))
+app.buybtn.clicked.connect(buy_clicked)
+app.sellbtn.clicked.connect(sell_clicked)
 
 sys.exit(game.exec_())

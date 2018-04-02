@@ -20,8 +20,6 @@ def dodge(player):
 def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - enemy
     if player.opponent.health < 1:
         player.opponent.health = 0
-        if player.health < 1:
-            return 'So close! You win.\n\n'
     enemy_dodge = 'Enemy dodged your attack.\n'
     your_dodge = 'Dodge! You get no damage.\n\n'
     critical = 'Crit! Damage doubled.\n'
@@ -30,6 +28,11 @@ def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - 
     enemy_dmg = '%s deal %s dmg to you. You are on %s hp.\n\n' % (
         player.opponent.name.title(), dmg2, player.health)
     main_text = ''
+    if player.opponent.health < 1 and player.health < 1:
+        if crit1:
+            main_text += critical
+        main_text += player_dmg
+        return '%sSo close! You win.' % main_text
     if dodge2:
         main_text += enemy_dodge
     else:

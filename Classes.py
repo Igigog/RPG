@@ -1,22 +1,31 @@
 from random import randint
-from lists import weapons, opponents, locations, armors
+from lists import weapons, opponents, locations, armors, loot
 
 
-class Player:
-    def __init__(self):
-        self.starthealth = 20
-        self.health = 20
-        self.attack = 3
-        self.opponent = ''
-        self.exp = 0
-        self.armor = armors[0]
-        self.weapon = weapons[0]
+class Mob:
+    def __init__(self, self_list):
+        self.name = self_list[0]
+        self.starthealth = self_list[1]
+        self.health = self_list[1]
+        self.attack = self_list[2]
+        self.armor = self_list[3]
+        self.lvl = self_list[4]
+        self.gold = self_list[5]
         self.crit = 1
         self.dodge = 1
+
+
+class Player(Mob):
+    def __init__(self):
+        self_list = ['player', 20, 3, armors[0], 1, 0]
+        super().__init__(self_list)
+        self.opponent = ''
+        self.exp = 0
+        self.weapon = weapons[0]
         self.wpninventory = [self.weapon]
         self.armorinventory = [self.armor]
-        self.lvl = 1
         self.location = locations[0]
+        self.garbageinv = []
 
     @classmethod
     def fibonacci(cls):
@@ -26,9 +35,9 @@ class Player:
             x, y = y, x+y
             yield y
 
-    def search_weapon(self):
+    def search_treasure(self):
         summa = 0
-        for x in range(1, len(weapons) + 1):   # search for triangle num
+        for x in range(1, len(loot) + 1):   # search for triangle num
             summa += x
         rand_ch = randint(1, summa)
         start_stat = 1
@@ -36,11 +45,10 @@ class Player:
             if rand_ch > start_stat:           # drop chance of last element = 1/summa etc.
                 start_stat += step             # drop chance of reversed n'th element = n'th term/sum
             else:
-                n = len(weapons) - (step - 1)  # step starts from 2 therefore we need to subtract 1
+                n = len(loot) - (step - 1)  # step starts from 2 therefore we need to subtract 1
                 break
-        if weapons[n] not in self.wpninventory:
-            self.wpninventory.append(weapons[n])
-        return weapons[n][0]
+        self.garbageinv.append(loot[n])
+        return loot[n][0]
 
     def find_opponent(self):
         enemy_list = []
@@ -59,15 +67,3 @@ class Player:
                 break
         self.lvl = lvl
 
-
-class Mob:
-    def __init__(self, enemy_list):
-        self.name = enemy_list[0]
-        self.starthealth = enemy_list[1]
-        self.health = enemy_list[1]
-        self.attack = enemy_list[2]
-        self.armor = enemy_list[3]
-        self.lvl = enemy_list[4]
-        self.golddrop = enemy_list[5]
-        self.crit = 1
-        self.dodge = 1
