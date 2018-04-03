@@ -13,17 +13,19 @@ class Mob:
         self.gold = self_list[5]
         self.crit = 1
         self.dodge = 1
+        self.energy = 5
 
 
 class Player(Mob):
     def __init__(self):
-        self_list = ['player', 20, 3, armors[0], 1, 0]
+        self_list = ['player', 20, 3, 0, 1, 0]
         super().__init__(self_list)
         self.opponent = ''
         self.exp = 0
         self.weapon = weapons[0]
+        self.equip = armors[0]
         self.wpninventory = [self.weapon]
-        self.armorinventory = [self.armor]
+        self.armorinventory = [self.equip]
         self.location = locations[0]
         self.garbageinv = []
 

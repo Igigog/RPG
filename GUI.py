@@ -68,12 +68,14 @@ class App(QWidget):
 
         self.grid.addWidget(self.srbtn, 2, 1)    # main mode
         self.grid.addWidget(self.fndbtn, 2, 2)
+        self.grid.addWidget(self.invbtn, 3, 1)
         self.grid.addWidget(self.savebtn, 3, 2)
         self.grid.addWidget(self.mapbtn, 4, 1)
         self.savebtn.hide()
         self.srbtn.hide()
         self.fndbtn.hide()
         self.mapbtn.hide()
+        self.invbtn.hide()
 
         self.grid.addWidget(self.atkbtn, 2, 2)    # fight mode
         self.grid.addWidget(self.escbtn, 2, 1)

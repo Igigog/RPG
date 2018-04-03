@@ -1,5 +1,5 @@
 def _hide_all(app):
-    app.loadbtn.hide()  #start mode
+    app.loadbtn.hide()  # start mode
     app.startbtn.hide()
 
     app.savebtn.hide()  # main mode
