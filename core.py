@@ -21,14 +21,31 @@ def game_start():
 def load_clicked():
     try:
         with open('save.txt', 'r') as f:
-            pre_load = []
-            for x in f.readline().split(','):
-                pre_load.append(int(x))
-
             global player
             player = Player()
-            player.exp = pre_load[0]
-            player.lvl_up()
+            player.wpninventory = []
+            player.armorinventory = []
+            player.weapon = []
+            player.equip = []
+
+            for x in f.readline().split(' '):
+                try:
+                    x = int(x)
+                    player.wpninventory.append(weapons[x])
+                except ValueError:
+                    pass
+            for x in f.readline().split(' '):
+                try:
+                    x = int(x)
+                    player.armorinventory.append(armors[x])
+                except ValueError:
+                    pass
+            stats = f.readline().split(' ')
+            player.exp = int(stats[0])
+            player.armor = int(stats[1])
+            player.gold = int(stats[2])
+            player.weapon = weapons[int(stats[3])]
+            player.equip = armors[int(stats[4])]
 
             app.label.setText('Load successful!\n')
 
@@ -42,19 +59,27 @@ def load_clicked():
 
 def save_clicked():
     with open('save.txt', 'w') as f:
-        f.write('%s,%s' % (player.wpninventory, player.exp))
+        for x in player.wpninventory:
+            print(x)
+            f.write('%s ' % x[5])
+        f.write('\n')
+        for x in player.armorinventory:
+            print(x)
+            f.write('%s ' % x[5])
+        f.write('\n')
+        print(player.exp, player.armor, player.gold, player.equip)
+        f.write('%s %s %s %s %s' % (player.exp, player.armor, player.gold, player.weapon[5], player.equip[5]))
 
 
 def find_clicked():
     player.find_opponent()
     fight_mode(app)
-    app.label.setText('Your opponent is %s\n\n' % (player.opponent.name))
+    app.label.setText('Your opponent is %s\n\n' % player.opponent.name)
 
 
 def search_clicked():
     app.label.clear()
-    if not randint(0, 1):
-        print('atk')
+    if randint(1, 10) < 3:
         find_clicked()
     elif player.energy:
         x = player.search_treasure()
@@ -80,7 +105,7 @@ def change_armor():
             player.armor = x[1]
             player.dodge = x[2]
             break
-    app.label.setText(app.label.text() + 'You armor is %s\n\n' % (player.armor[0]))
+    app.label.setText(app.label.text() + 'You armor is %s\n\n' % (player.equip[0]))
 
 
 def change_weapon():
@@ -206,6 +231,7 @@ def change_market_mode():
 
 
 def connect_buttons():
+    """connect all buttons from GUI with functions"""
     app.startbtn.clicked.connect(game_start)    # start mode
     app.loadbtn.clicked.connect(load_clicked)
 

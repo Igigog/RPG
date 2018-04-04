@@ -18,7 +18,6 @@ def dodge(player):
 
 
 def armor_stat(player, damage):
-    print(player.armor, damage * 2)
     if damage * 2 <= player.armor:
         return 0
     elif damage >= player.armor * 4:
@@ -37,6 +36,7 @@ def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - 
         dmg1, player.opponent.name.title(), player.opponent.health)
     enemy_dmg = '%s deal %s dmg to you. You are on %s hp.\n\n' % (
         player.opponent.name.title(), dmg2, player.health)
+    armor_zerodmg = 'Oops, armor is too strong. No damage dealt.'
     main_text = ''
     if player.opponent.health < 1 and player.health < 1:
         if crit1:
@@ -48,13 +48,19 @@ def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - 
     else:
         if crit1:
             main_text += critical
-        main_text += player_dmg
+        if not enemy_dmg:
+            main_text += armor_zerodmg
+        else:
+            main_text += player_dmg
     if dodge1:
         main_text += your_dodge
     else:
         if crit2:
             main_text += critical
-        main_text += enemy_dmg
+        if not enemy_dmg:
+            main_text += armor_zerodmg
+        else:
+            main_text += enemy_dmg
     return main_text
 
 
