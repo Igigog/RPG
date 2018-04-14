@@ -23,7 +23,7 @@ def armor_stat(player, damage):
     elif damage >= player.armor * 4:
         return damage - (player.armor//2)
     else:
-        return damage//2
+        return damage//2 + 1
 
 
 def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - enemy
@@ -102,7 +102,7 @@ def pobeditel(player):
     elif player.health < 1:
         return False
     else:
-        return 'nothing'
+        return 0
 
 
 def pobeg(player):

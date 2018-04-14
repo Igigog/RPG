@@ -1,31 +1,12 @@
 def _hide_all(app):
-    app.loadbtn.hide()  # start mode
-    app.startbtn.hide()
+    for x in app.buttons_dict:
+        exec('app.%s.hide()' % x)
 
-    app.savebtn.hide()  # main mode
-    app.fndbtn.hide()
-    app.srbtn.hide()
-    app.mapbtn.hide()
-    app.invbtn.hide()
-
-    app.escbtn.hide()   # fight mode
-    app.atkbtn.hide()
-
-    app.cngwpnbtn.hide()   # inv mode
     app.wpnbox.hide()
-    app.extinvbtn.hide()
     app.armorbox.hide()
-    app.cngarmorbtn.hide()
 
-    app.extmapbtn.hide()    # map mode
-    app.cnglocbtn.hide()
     app.mapbox.hide()
-    app.marketbtn.hide()
 
-    app.markettab.hide()    # market mode
-    app.extmarket.hide()
-    app.buybtn.hide()
-    app.sellbtn.hide()
     app.marketbox.hide()
 
 

@@ -1,41 +1,26 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import \
-    QWidget, QPushButton, QLabel, QGridLayout, QFrame, QComboBox, QTabBar
-from PyQt5.QtGui import QIcon
+    QWidget, QPushButton, QLabel, QGridLayout, QFrame, QComboBox, QTabBar, QTextEdit
+from PyQt5.QtGui import QIcon, QPalette, QColor, QTextCursor
+from itertools import zip_longest
 
 
 class App(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        self.init_ui()
 
     def okno(self):
-        self.setGeometry(300, 300, 600, 500)
+        self.setGeometry(300, 300, 750, 500)
         self.setWindowTitle('WITCHER WITH BLACKJACK AND PLOTVA')
         self.setWindowIcon(QIcon('ico.ico'))
 
     def buttons(self):
-        self.startbtn = QPushButton('Start')
-        self.loadbtn = QPushButton('Load')
 
-        self.atkbtn = QPushButton('Attack')
-        self.escbtn = QPushButton('Escape')
-
-        self.invbtn = QPushButton('Inventory')
-        self.savebtn = QPushButton('Save')
-        self.srbtn = QPushButton('Search for a treasure')
-        self.fndbtn = QPushButton('Opponent')
-        self.mapbtn = QPushButton('Map')
-
-        self.cngwpnbtn = QPushButton('Change weapon')
-        self.extinvbtn = QPushButton('Leave inventory')
-        self.cngarmorbtn = QPushButton('Change armor')
         self.armorbox = QComboBox()
         self.wpnbox = QComboBox()
 
         self.mapbox = QComboBox()
-        self.cnglocbtn = QPushButton('Change location')
-        self.extmapbtn = QPushButton('Exit Map')
 
         self.markettab = QTabBar()
         self.markettab.setShape(1)
@@ -43,16 +28,32 @@ class App(QWidget):
         self.markettab.addTab('Weapons')
         self.markettab.addTab('Armor')
         self.buybtn = QPushButton('Buy')
-        self.marketbtn = QPushButton('Market')
-        self.extmarket = QPushButton('Exit Market')
-        self.sellbtn = QPushButton('Sell garbage')
 
-    def initUI(self):
+        buttons_names = ['Start', 'Load', 'Attack',
+                         'Escape', 'Inventory', 'Save', 'Search for a treasure',
+                         'Opponent', 'Map', 'Change weapon', 'Leave inventory',
+                         'Change armor', 'Change location', 'Exit Map', 'Buy',
+                         'Market', 'Exit Market', 'Sell garbage']
+
+        self.buttons_dict = ['startbtn', 'loadbtn', 'atkbtn',
+                        'escbtn', 'invbtn', 'savebtn','srbtn',
+                        'fndbtn', 'mapbtn', 'cngwpnbtn','extinvbtn',
+                        'cngarmorbtn', 'cnglocbtn','extmapbtn', 'buybtn',
+                        'marketbtn', 'extmarket', 'sellbtn']
+
+        for x, y in zip_longest(self.buttons_dict, buttons_names):
+            exec('self.%s = QPushButton("%s")' % (x, y))
+
+    def init_ui(self):
         self.okno()
         self.grid = QGridLayout()
         self.setLayout(self.grid)
 
-        self.label = QLabel()
+        self.label = QTextEdit()
+        pal = QPalette()
+        pal.setColor(QPalette.Base, QColor.fromRgb(242, 242, 242))
+        self.label.setPalette(pal)
+        self.label.setReadOnly(True)
         self.label.setFrameStyle(QFrame.Box)           # main label
         self.label.setFrameShadow(QFrame.Raised)
         self.label.setMidLineWidth(1)
@@ -61,12 +62,20 @@ class App(QWidget):
         self.grid.addWidget(self.label, 1, 1, 1, 2)
         self.label.setText('Are you ready for adventure?')
 
+        self.statlabel = QLabel()
+        self.statlabel.setFrameStyle(QFrame.Box)            # stat label
+        self.statlabel.setFrameShadow(QFrame.Raised)
+        self.statlabel.setMidLineWidth(1)
+        self.statlabel.setLineWidth(1)
+        self.statlabel.setAlignment(Qt.AlignTop)
+        self.grid.addWidget(self.statlabel, 1, 3)
+
         self.buttons()
 
-        self.grid.addWidget(self.startbtn, 2, 1)  # start screen
+        self.grid.addWidget(self.startbtn, 2, 1)    # start screen
         self.grid.addWidget(self.loadbtn, 2, 2)
 
-        self.grid.addWidget(self.srbtn, 2, 1)    # main mode
+        self.grid.addWidget(self.srbtn, 2, 1)       # main mode
         self.grid.addWidget(self.fndbtn, 2, 2)
         self.grid.addWidget(self.invbtn, 3, 1)
         self.grid.addWidget(self.savebtn, 3, 2)
@@ -77,12 +86,12 @@ class App(QWidget):
         self.mapbtn.hide()
         self.invbtn.hide()
 
-        self.grid.addWidget(self.atkbtn, 2, 2)    # fight mode
+        self.grid.addWidget(self.atkbtn, 2, 2)      # fight mode
         self.grid.addWidget(self.escbtn, 2, 1)
         self.atkbtn.hide()
         self.escbtn.hide()
 
-        self.grid.addWidget(self.wpnbox, 2, 1)     # inventory mode
+        self.grid.addWidget(self.wpnbox, 2, 1)      # inventory mode
         self.grid.addWidget(self.extinvbtn, 4, 1)
         self.grid.addWidget(self.cngwpnbtn, 2, 2)
         self.grid.addWidget(self.armorbox, 3, 1)
@@ -117,6 +126,7 @@ class App(QWidget):
         self.show()
 
 
-
-
-
+def insert_text(widget, text):
+    widget.moveCursor(QTextCursor.End)
+    widget.insertPlainText(text)
+    widget.moveCursor(QTextCursor.End)

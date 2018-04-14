@@ -1,3 +1,4 @@
+from PyQt5.QtCore import pyqtSignal
 from random import randint
 from lists import weapons, opponents, locations, armors, loot
 
@@ -18,7 +19,7 @@ class Mob:
 
 class Player(Mob):
     def __init__(self):
-        self_list = ['player', 20, 3, 0, 1, 0]
+        self_list = ['player', 20, 1, 0, 1, 0]
         super().__init__(self_list)
         self.opponent = ''
         self.exp = 0
@@ -68,4 +69,3 @@ class Player(Mob):
             else:
                 break
         self.lvl = lvl
-
