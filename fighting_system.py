@@ -26,74 +26,35 @@ def armor_stat(player, damage):
         return damage//2 + 1
 
 
-def vivod(crit1, crit2, dodge1, dodge2, dmg1, dmg2, player):  # 1 - player, 2 - enemy
-    if player.opponent.health < 1:
-        player.opponent.health = 0
-    enemy_dodge = 'Enemy dodged your attack.\n'
-    your_dodge = 'Dodge! You get no damage.\n\n'
-    critical = 'Crit! Damage doubled.\n'
-    player_dmg = 'You deal %s dmg to enemy. %s is on %s hp.\n' % (
-        dmg1, player.opponent.name.title(), player.opponent.health)
-    enemy_dmg = '%s deal %s dmg to you. You are on %s hp.\n\n' % (
-        player.opponent.name.title(), dmg2, player.health)
-    armor_zerodmg = 'Oops, armor is too strong. No damage dealt.'
+def vivod(result):
     main_text = ''
-    if player.opponent.health < 1 and player.health < 1:
-        if crit1:
-            main_text += critical
-        main_text += player_dmg
-        return '%sSo close!\n' % main_text
-    if dodge2:
-        main_text += enemy_dodge
+    if not result:
+        return 'Dodge! No damage dealt.\n'
     else:
-        if crit1:
-            main_text += critical
-        if not enemy_dmg:
-            main_text += armor_zerodmg
-        else:
-            main_text += player_dmg
-    if dodge1:
-        main_text += your_dodge
-    else:
-        if crit2:
-            main_text += critical
-        if not enemy_dmg:
-            main_text += armor_zerodmg
-        else:
-            main_text += enemy_dmg
-    return main_text
+        if result[2]:
+            main_text += 'Crit! Damage doubled.\n'
+        main_text += '%s deal %s damage to %s. %s is on %s hp.\n' % (
+            result[0].name.title(), result[3], result[1].name, result[1].name.title(), result[1].health)
+        return main_text
 
 
 def attack(player):
-    player_crit = 0
-    enemy_crit = 0
-    player_damage = 0
-    enemy_damage = 0
-    if dodge(player.opponent):
-        enemy_dodge = True
+    enemy = player.opponent
+    player_damage = player.attack + player.weapon[1]
+
+    if dodge(player):
+        return False
     else:
-        enemy_dodge = False
-        player_damage = player.attack + player.weapon[1]
         if crit(player):
             player_crit = True
             player_damage *= 2
         else:
-            player_damage = armor_stat(player.opponent, player_damage)
+            player_damage = armor_stat(enemy, player_damage)
             player_crit = False
-        player.opponent.health -= player_damage
-    if dodge(player):
-        player_dodge = True
-    else:
-        player_dodge = False
-        enemy_damage = player.opponent.attack
-        if crit(player.opponent):
-            enemy_crit = True
-            enemy_damage *= 2
-        else:
-            enemy_damage = armor_stat(player, enemy_damage)
-            enemy_crit = False
-        player.health -= enemy_damage
-    return vivod(player_crit, enemy_crit, player_dodge, enemy_dodge, player_damage, enemy_damage, player)
+        enemy.health -= player_damage
+        if enemy.health < 1:
+            enemy.health = 0
+        return [player, enemy, player_crit, player_damage]
 
 
 def pobeditel(player):
@@ -113,3 +74,17 @@ def pobeg(player):
     else:
         player.health -= player.opponent.attack
         return False
+
+
+def win(player):
+    startlvl = player.lvl
+    win_text = 'Congratulations! You win!\nHealth restored\nExp +1\nGold + %s\n\n' % player.opponent.gold
+    player.health = player.starthealth
+    player.exp += 1
+    player.energy = 5
+    player.gold += player.opponent.gold
+    player.opponent = ''
+    player.lvl_up()
+    if player.lvl > startlvl:
+        win_text += 'Level up! Your lvl is now %s\n' % player.lvl
+    return win_text

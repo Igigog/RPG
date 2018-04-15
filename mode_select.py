@@ -7,6 +7,7 @@ def _hide_all(app):
 
     app.mapbox.hide()
 
+    app.markettab.hide()
     app.marketbox.hide()
 
 
@@ -38,7 +39,6 @@ def inv_mode(app):
 
 
 def dead_mode(app):
-    app.label.setText(app.label.text() + 'You lose! Try again next time!')
     _hide_all(app)
 
     app.startbtn.show()

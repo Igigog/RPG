@@ -24,49 +24,48 @@ def game_start():
 
 
 def load_clicked():
+    global player
+    player = Player()
+
+    new_player = Player()
+    new_player.wpninventory.clear()
+    new_player.armorinventory.clear()
+    new_player.weapon = []
+    new_player.equip = []
+
     try:
-        with open('save.txt', 'r') as f:
-            global player
-            player = Player()
-            player.wpninventory.clear()
-            player.armorinventory.clear()
-            player.weapon = []
-            player.equip = []
-
-            for x in f.readline().split(' '):
-                try:
-                    x = int(x)
-                    player.wpninventory.append(weapons[x])
-                except ValueError:
-                    pass
-            for x in f.readline().split(' '):
-                try:
-                    x = int(x)
-                    player.armorinventory.append(armors[x])
-                except ValueError:
-                    pass
-            for x in f.readline().split(' '):
-                try:
-                    x = int(x)
-                    player.garbageinv.append(loot[x])
-                except ValueError:
-                    pass
-            stats = f.readline().split(' ')
-            player.exp = int(stats[0])
-            player.armor = int(stats[1])
-            player.gold = int(stats[2])
-            player.weapon = weapons[int(stats[3])]
-            player.equip = armors[int(stats[4])]
-            player.lvl_up()
-
-            app.label.setText('Load successful!\n')
-
-            main_mode(app)
-
+        f = open('save.txt', 'r')
     except FileNotFoundError:
         app.label.setText('There is no saves!')
-    except (IndexError, ValueError):
-        app.label.setText('Save corrupted!')
+        return False
+
+    try:
+        for step in range(3):
+            line = f.readline().replace('\n', '').split(' ')
+            line.remove('')
+            for x in line:
+                x = int(x)
+                if step == 0:
+                    new_player.wpninventory.append(weapons[x])
+                elif step == 1:
+                    new_player.armorinventory.append(armors[x])
+                elif step == 2:
+                    new_player.garbageinv.append(loot[x])
+
+        stats = f.readline().split(' ')
+        new_player.exp = int(stats[0])
+        new_player.armor = int(stats[1])
+        new_player.gold = int(stats[2])
+        new_player.weapon = weapons[int(stats[3])]
+        new_player.equip = armors[int(stats[4])]
+        new_player.lvl_up()
+    except (ValueError, IndexError):
+        app.label.setText('Save corrupted')
+        return False
+
+    player = new_player
+    app.label.setText('Load successful')
+    main_mode(app)
 
 
 def save_clicked():
@@ -97,6 +96,7 @@ def search_clicked():
     elif player.energy:
         x = player.search_treasure()
         insert_text(app.label, ('You found %s\n' % x))
+        player.energy -= 1
     else:
         insert_text(app.label, 'No energy\n')
 
@@ -133,23 +133,16 @@ def change_weapon():
 
 
 def atk_clicked():
-    startlvl = player.lvl
-    insert_text(app.label, attack(player))
+    player_atk = attack(player)
+    enemy_atk = attack(player.opponent)
+    insert_text(app.label, (vivod(player_atk) +  vivod(enemy_atk) + '\n\n'))
     if pobeditel(player):
         main_mode(app)
-        insert_text(app.label, 'Congratulations! You win!\nHealth restored\nExp +1\nGold + %s\n\n' %
-                    player.opponent.gold)
-        player.health = player.starthealth
-        player.exp += 1
-        player.energy = 5
-        player.gold += player.opponent.gold
-        player.opponent = ''
-        player.lvl_up()
-        if player.lvl > startlvl:
-            insert_text(app.label, 'Level up! Your lvl is now %s\n' % player.lvl)
+        insert_text(app.label, win(player))
     elif pobeditel(player) == 0:
         pass
     else:
+        insert_text(app.label, 'You lose! Try again next time!')
         dead_mode(app)
 
 
@@ -160,6 +153,7 @@ def esc_clicked():
     else:
         insert_text(app.label, 'Escape failed :c\nYou get %s damage\n\n' % player.opponent.attack)
         if player.health < 1:
+            insert_text(app.label, 'You lose! Try again next time!')
             dead_mode(app)
 
 
@@ -211,11 +205,17 @@ def buy_clicked():
                 insert_text(app.label, 'Not enough gold.\n\n')
                 return False
             else:
-                player.gold -= n[4]
                 if n in weapons:
+                    if n in player.wpninventory:
+                        insert_text(app.label, '%s is already yours' % n[0])
+                        return False
                     player.wpninventory.append(n)
                 else:
+                    if n in player.armorinventory:
+                        insert_text(app.label, '%s is already yours' % n[0])
+                        return False
                     player.armorinventory.append(n)
+                player.gold -= n[4]
             insert_text(app.label, '%s in now yours.\n' % n[0])
             return True
 
