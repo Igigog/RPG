@@ -135,7 +135,7 @@ def change_weapon():
 def atk_clicked():
     player_atk = attack(player)
     enemy_atk = attack(player.opponent)
-    insert_text(app.label, (vivod(player_atk) +  vivod(enemy_atk) + '\n\n'))
+    insert_text(app.label, (vivod(player_atk) + vivod(enemy_atk) + '\n\n'))
     if pobeditel(player):
         main_mode(app)
         insert_text(app.label, win(player))

@@ -1,0 +1,5 @@
+et-xmlfile==1.0.1
+jdcal==1.4
+openpyxl==2.6.0
+PyQt5==5.12
+PyQt5-sip==4.19.14
